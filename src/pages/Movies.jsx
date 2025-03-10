@@ -1,23 +1,45 @@
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import MovieCarousel from "../components/MovieCarousel";
 import Footer from "../components/Footer";
 
-const movies1 = ["Movie 1", "Movie 2", "Movie 3", "Movie 4", "Movie 5", "Movie 6", "Movie 7", "Movie 8", "Movie 9", "Movie 10"];
-const movies2 = [...movies1];
-const movies3 = [...movies1];
-const movies4 = [...movies1];
-const movies5 = [...movies1];
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const BASE_URL = "https://api.themoviedb.org/3";
 
 const Movies = () => {
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [newReleases, setNewReleases] = useState([]);
+  const [actionMovies, setActionMovies] = useState([]);
+
+  const fetchMovies = async (endpoint, setter) => {
+    try {
+      const res = await fetch(`${BASE_URL}${endpoint}&api_key=${API_KEY}`);
+      const data = await res.json();
+      setter(data.results || []);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMovies("/movie/popular?", setPopularMovies);
+    fetchMovies("/movie/top_rated?", setTopRatedMovies);
+    fetchMovies("/trending/movie/week?", setTrendingMovies);
+    fetchMovies("/movie/now_playing?", setNewReleases);
+    fetchMovies("/discover/movie?with_genres=28", setActionMovies);
+  }, []);
+
   return (
     <>
       <Navbar />
       <h1 className="page-title">Movies</h1>
-      <MovieCarousel title="Popular Movies" items={movies1} />
-      <MovieCarousel title="Top Rated" items={movies2} />
-      <MovieCarousel title="Trending Now" items={movies3} />
-      <MovieCarousel title="New Releases" items={movies4} />
-      <MovieCarousel title="Action Movies" items={movies5} />
+      <MovieCarousel title="Popular Movies" items={popularMovies} />
+      <MovieCarousel title="Top Rated" items={topRatedMovies} />
+      <MovieCarousel title="Trending Now" items={trendingMovies} />
+      <MovieCarousel title="New Releases" items={newReleases} />
+      <MovieCarousel title="Action Movies" items={actionMovies} />
       <Footer />
     </>
   );

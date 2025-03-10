@@ -34,4 +34,40 @@
     color: white;
     text-decoration: none;
   }
+
+  @media (max-width: 1024px) {
+    html, body {
+      font-size: 14px;
+    }
+    
+    main {
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    html, body {
+      font-size: 12px;
+    }
+  
+    #root {
+      align-items: flex-start;
+    }
+  
+    main {
+      padding: 15px;
+      justify-content: flex-start;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    html, body {
+      font-size: 10px;
+    }
+  
+    main {
+      padding: 10px;
+    }
+  }
+  
   

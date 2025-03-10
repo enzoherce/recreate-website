@@ -1,28 +1,51 @@
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import MovieCarousel from "../components/MovieCarousel";
 import Footer from "../components/Footer";
 
-const movies = [
-  "Movie 1", "Movie 2", "Movie 3", "Movie 4", "Movie 5",
-  "Movie 6", "Movie 7", "Movie 8", "Movie 9", "Movie 10"
-];
-
-const series = [
-  "Series 1", "Series 2", "Series 3", "Series 4", "Series 5",
-  "Series 6", "Series 7", "Series 8", "Series 9", "Series 10"
-];
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const Home = () => {
+  const [movies, setMovies] = useState([]);
+  const [series, setSeries] = useState([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
+        );
+        const data = await res.json();
+        setMovies(data.results || []);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+
+    const fetchSeries = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`
+        );
+        const data = await res.json();
+        setSeries(data.results || []);
+      } catch (error) {
+        console.error("Error fetching series:", error);
+      }
+    };
+
+    fetchMovies();
+    fetchSeries();
+  }, []);
+
   return (
     <>
       <Navbar />
       <Hero />
-      <div className="spacer"></div> {/* ✅ Adds extra space before scrolling */}
-      <MovieCarousel title="Movies" items={movies} />
-      <MovieCarousel title="Series" items={series} />
-      <MovieCarousel title="Movies" items={movies} />
-      <MovieCarousel title="Series" items={series} />
+      <div className="spacer"></div> {/* */}
+      <MovieCarousel title="Trending Movies" items={movies} />
+      <MovieCarousel title="Trending Series" items={series} />
       <Footer />
     </>
   );

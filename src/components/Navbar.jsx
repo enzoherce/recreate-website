@@ -12,9 +12,6 @@ const Navbar = () => {
         <Link to="/movies">Movies</Link>
       </div>
 
-      <Link to="/login">
-        <button className="nav-button">Sign In / Create Account</button>
-      </Link>
     </nav>
   );
 };
